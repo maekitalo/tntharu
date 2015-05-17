@@ -1,0 +1,20 @@
+<%pre>
+
+#include "hpdf++.h"
+
+</%pre>
+<%cpp>
+
+std::vector<std::string> fonts = hpdf::getType1Fonts();
+
+</%cpp>
+<ul>
+<%cpp>
+  for (auto it = fonts.begin(); it != fonts.end(); ++it)
+  {
+    cxxtools::QueryParams q;
+    q.add("font", *it);
+</%cpp>
+  <li><a href="fontpage.pdf?<$$ q $>"><$ *it $></li>
+% }
+</ul>

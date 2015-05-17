@@ -1,0 +1,49 @@
+<%pre>
+
+#include <hpdf++.h>
+
+</%pre>
+<%cpp>
+
+reply.setContentType("application/pdf");
+
+hpdf::Pdf pdf;
+
+//pdf.setPageMode(HPDF_PAGE_MODE_USE_OUTLINE);
+//pdf.setPageMode(HPDF_PAGE_MODE_FULL_SCREEN);
+pdf.setPageMode(HPDF_PAGE_MODE_USE_THUMBS);
+
+hpdf::Page page1(pdf);
+hpdf::Page page2(pdf);
+hpdf::Page page3(pdf);
+
+hpdf::Outline root(pdf, "OutlineRoot");
+root.setOpened(true);
+
+hpdf::Outline outline1(root, "Page 1");
+outline1.setDestination(page1);
+
+hpdf::Outline outline2(root, "Page 2");
+outline2.setDestination(page2);
+
+hpdf::Outline outline3(root, "Page 3");
+outline3.setDestination(page3);
+
+hpdf::Font font(pdf, "Helvetica", "ISO8859-15");
+
+page1.text()
+     .setFontAndSize(font, 16)
+     .textOut(60, page1.height() - 80, "This is page 1");
+
+page2.text()
+     .setFontAndSize(font, 16)
+     .textOut(60, page2.height() - 80, "This is page 2");
+
+page3.text()
+     .setFontAndSize(font, 16)
+     .textOut(60, page3.height() - 80, "This is page 3");
+
+reply.out() << pdf;
+
+</%cpp>
+

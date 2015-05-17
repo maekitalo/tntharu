@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ecpp application tntharu</title>
+    <meta charset="utf-8">
+    <meta name="description" content="tntharu application">
+    <link rel="stylesheet" href="/tntharu.css" type="text/css">
+  </head>
+  <body>
+    <div id="header">
+      <span id="title">Test application for creating pdfs using libharu in tntnet</span>
+    </div>
+
+    <div id="menu">
+      <ul class="nav">
+        <li class="navitem"><a href="/">Home</a></li>
+        <li class="navitem"><a href="/fonts">Fontlist</a></li>
+        <li class="navitem"><a href="/ttfonts">TT Fontlist</a></li>
+      </ul>
+    </div>
+
+    <div id="content">
+       <& (request.getArg("next")) qparam >
+    </div>
+  </body>
+</html>

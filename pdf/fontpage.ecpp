@@ -1,0 +1,87 @@
+<%args>
+font;
+</%args>
+<%pre>
+
+#include <hpdf++.h>
+#include <cxxtools/utf8codec.h>
+#include <cxxtools/iso8859_15codec.h>
+
+</%pre>
+<%cpp>
+
+reply.setContentType("application/pdf");
+
+hpdf::Pdf pdf;
+
+hpdf::Page page(pdf);
+
+log_debug("page width=" << page.width() << " height=" << page.height());
+
+page.setLineWidth(1)
+    .rectangle(50, 50, page.width() - 100, page.height() - 110)
+    .stroke();
+
+// draw grid
+const int gridX = 60;
+const int gridY = page.height() - 200;
+const int gridW = 20;
+const int gridH = 20;
+
+page.setLineWidth(2)
+    .rectangle(gridX, gridY, 17*gridW, -17*gridH)
+    .stroke();
+
+page.setLineWidth(0.5);
+for (int x = 1; x <= 16; ++x)
+{
+  page.moveTo(gridX + x * gridW, gridY)
+      .lineTo(gridX + x * gridW, gridY - 17 * gridH)
+      .stroke();
+}
+
+for (int y = 1; y <= 16; ++y)
+{
+  page.moveTo(gridX, gridY - y * gridH)
+      .lineTo(gridX + 17 * gridW, gridY - y * gridH)
+      .stroke();
+}
+
+hpdf::Font defFont(pdf, "Helvetica");
+page.text().setFontAndSize(defFont, 16);
+
+static const char hhh[] = "0\0001\0002\0003\0004\0005\0006\0007\0008\0009\000A\000B\000C\000D\000E\000F";
+for (int x = 0; x < 16; ++x)
+{
+  page.text()
+      .textCenter(gridX + (1 + x) * gridW + gridW / 2, gridY - gridH + 2, hhh + x * 2)
+      .textCenter(gridX + gridW / 2, gridY - (2 + x) * gridH + 2, hhh + x * 2);
+}
+
+// print example text
+const char* font_name = pdf.loadType1FontFromName(font);
+hpdf::Font myFont(pdf, font_name, "ISO8859-15");
+page.text()
+    .textOut(gridX + 2, gridY + 2, font.c_str())
+    .setFontAndSize(myFont, 16);
+
+{
+  hpdf::Text t = page.text();
+  char txt[2] = "x";
+  for (int c = 33; c <= 255; ++c)
+  {
+    txt[0] = c;
+    int x = c % 16;
+    int y = c / 16;
+    t.textCenter(gridX + (1 + x) * gridW + gridW / 2, gridY - (2 + y) * gridH + 2, txt);
+  }
+}
+
+const char utf8txt[] = "Tommi Mäkitalo [äöüÄÖÜß]";
+
+page.text()
+    .textOut(60, page.height() - 80, cxxtools::encode<cxxtools::Iso8859_15Codec>(cxxtools::decode<cxxtools::Utf8Codec>(utf8txt)).c_str());
+
+reply.out() << pdf;
+
+</%cpp>

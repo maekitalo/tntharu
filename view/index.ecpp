@@ -1,0 +1,7 @@
+<%include>model/index.ecpp</%include>
+<h1>tntharu</h1>
+
+<p>Welcome to the tntharu application.</p>
+
+<a href="/example.pdf">Example PDF</a>
+<a href="/outline.pdf">Outline PDF</a>

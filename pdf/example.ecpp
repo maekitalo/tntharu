@@ -1,0 +1,27 @@
+<%pre>
+
+#include <hpdf++.h>
+
+</%pre>
+<%cpp>
+
+reply.setContentType("application/pdf");
+
+hpdf::Pdf pdf;
+
+hpdf::Page page(pdf);
+page.setLineWidth(1)
+    .rectangle(50, 50, page.width() - 100, page.height() - 110)
+    .stroke();
+
+const char* font_name = pdf.loadTTFontFromFile("/usr/share/fonts/gnu-free/FreeSans.ttf");
+//const char* font_name = pdf.loadType1FontFromFile("type1/a010013l.afm", "type1/a010013l.pfb");
+hpdf::Font defFont(pdf, font_name, "ISO8859-15");
+
+page.text()
+    .setFontAndSize(defFont, 16)
+    .textOut(60, page.height() - 80, "Tommi M\xe4kitalo");
+
+reply.out() << pdf;
+
+</%cpp>
